@@ -6,6 +6,8 @@
     "outDir": "dist",
     "rootDir": "src",
     "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "declaration": true,
     "sourceMap": true
   },
