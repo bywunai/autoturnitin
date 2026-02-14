@@ -1,0 +1,69 @@
+AutoTurnitin 本地搭建说明
+==========================
+
+一、准备环境
+------------
+1. 安装 Node.js 18 或 20（https://nodejs.org，LTS 版本即可）。安装后在终端执行 `node -v`、`npm -v` 确认版本。
+2. 安装 pnpm：
+   ```bash
+   npm install -g pnpm
+   ```
+   安装完成执行 `pnpm -v` 进行校验。
+3. （可选）安装 Git（https://git-scm.com），方便拉取或提交代码。
+
+二、获取源码
+------------
+- 直接解压我提供的 `autoturnitin-source.zip` 到任意本地目录；或
+- 使用 Git 克隆：
+  ```bash
+  git clone -b 260214-feat-turnitin-clone-docs https://github.com/bywunai/autoturnitin.git
+  cd autoturnitin
+  ```
+
+三、安装依赖
+------------
+在项目根目录（包含 package.json 的目录）执行：
+```bash
+pnpm install
+```
+此命令会一次性安装前台、后台、API 以及共享包所需的所有依赖。
+
+四、启动开发服务
+----------------
+需分别启动 API、自助前台、管理后台，可各开一个终端窗口：
+
+1. 启动 API（默认端口 4000）：
+   ```bash
+   pnpm --filter api start:dev
+   ```
+
+2. 启动自助前台（默认端口 5173，自动代理至 4000）：
+   ```bash
+   pnpm --filter web dev
+   ```
+
+3. 启动管理后台（默认端口 5174，同样代理至 4000）：
+   ```bash
+   pnpm --filter admin dev
+   ```
+
+保持三个终端运行即可同时预览三端。
+
+五、访问地址
+------------
+- 前台页面：`http://localhost:5173`
+- 管理后台：`http://localhost:5174`
+- API：`http://localhost:4000/api/...`（可用浏览器或 Postman 调试）
+
+六、常见问题
+------------
+1. `pnpm` 命令不存在：确认已执行 `npm install -g pnpm`，或重启终端。Windows 下可把 `C:\Users\<用户名>\AppData\Roaming\npm` 加入 PATH。
+2. 端口被占用：结束占用进程或在命令前设置环境变量，例如 `PORT=5001 pnpm --filter api start:dev`，并同步修改前端 `vite.config.ts` 中 proxy 目标。
+3. 安装依赖失败：检查网络，可开启代理或重试；必要时以管理员身份运行终端。
+4. `Cannot find module ...`：说明 `pnpm install` 未成功或当前终端目录错误，请回到项目根目录重新执行。
+
+七、后续操作
+------------
+- 生产构建：依次执行 `pnpm --filter web build`、`pnpm --filter admin build`、`pnpm --filter api build`。
+- API 目前使用内存 Mock，可按需求接入数据库、对象存储等。
+- 有任何错误信息或新需求，随时告知，我会协助排查与迭代。
